@@ -1,18 +1,41 @@
+<!-- eslint-disable vue/valid-v-for -->
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="events">
+    <h1>Events For Good</h1>
+    <EventCard v-for="event in events" :key="event.id" :event="event" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import EventCard from "@/components/EventCard.vue";
+import EventService from "@/services/EventService";
 
 export default {
   name: "HomeView",
   components: {
-    HelloWorld,
+    EventCard,
+  },
+  data() {
+    return {
+      events: [],
+    };
+  },
+  created() {
+    EventService.getEvents()
+      .then((res) => {
+        this.events = res.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>
+<style scoped>
+.events {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
